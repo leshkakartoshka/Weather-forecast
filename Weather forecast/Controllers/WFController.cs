@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Framework;
+using Newtonsoft.Json;
 using Weather_forecast.data;
 using Weather_forecast.Models;
 
@@ -16,12 +18,21 @@ namespace Weather_forecast.Controllers
         }
 
         /// <summary>
-        /// Введите начальный и последний элементы списка.
+        /// Введите начальный и последний элементы списка(20 записей).
         /// </summary>
         [HttpGet]
         public ActionResult<IEnumerable<WFModel>> GetWFs(int first, int last)
         {
             var days = _db.WFs.ToList();
+            if (first > last || first < 0 || last > days.Count || first ==  0 || last == 0)
+            {
+                return BadRequest("Невалидные данные");
+            }
+
+            if (days == null)
+            {
+            return NotFound();
+            }
 
             WFModel[] partDays = new WFModel[days.Count];
             days.CopyTo(0, partDays, 0, days.Count);
