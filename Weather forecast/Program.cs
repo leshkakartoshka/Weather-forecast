@@ -3,9 +3,15 @@ using System.Reflection;
 using System.IO;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Weather_forecast.Models;
+using Weather_forecast.data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<ApplicationDbContext>(option =>
+{
+    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
+});
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
